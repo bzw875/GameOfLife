@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+table {
+        border-collapse: collapse;
+}
+td {
+    padding: 2px;
+    border: 1px solid #ddd;
+}
+.life {
+    background-color: #000;
+}
+</style>
+</head>
+<body>
+<script type="text/javascript" src="CellLife.js"></script>
+<script type="text/javascript" src="../software\lib\js\jquery.js"></script>
+<script type="text/javascript">
+
+$(function(){
+    var td = new Array(101).join( '<tr>'+(new Array(101)).join('<td></td>')+'</tr>' );
+    $('#box').html(td);
+    var theCell = new CellLife(1, 20000);
+    theCell.tick(function(life){
+        $('#box').find('td').removeClass('life');
+        var tr = $('#box').find('tr');
+        for (var i = 0, len = life.length; i < len; i++) {
+            var cell = life[i];
+            $(tr[cell.y]).find('td:eq('+cell.x+')').attr('class','life');
+        }
+    });
+});
+</script>
+<table>
+    <tbody id="box"></tbody>
+</table>
+</body>
+</html>
