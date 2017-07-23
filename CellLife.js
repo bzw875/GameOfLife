@@ -6,15 +6,15 @@ function CellLife(intervals, cellNumber) {
 }
 
 CellLife.prototype.tick = function (callback){
-    let that = this;
+    const that = this;
     callback(this.life);
-    let timer = setInterval(function(){
+    const timer = setInterval(function(){
         
-        let neighbor = that.findNeighbor(that.life);
-        let frequency = that.countFrequency(neighbor, that.life);
-        let newLife = that.filterCountIsThree(frequency);
-        let countIsTwo = that.filterCountIsTwo(frequency);
-        let nowlife = that.mergeNewLifeAndSurvive(newLife, countIsTwo, that.life);
+        const neighbor = that.findNeighbor(that.life);
+        const frequency = that.countFrequency(neighbor, that.life);
+        const newLife = that.filterCountIsThree(frequency);
+        const countIsTwo = that.filterCountIsTwo(frequency);
+        const nowlife = that.mergeNewLifeAndSurvive(newLife, countIsTwo, that.life);
 
         that.life = nowlife;
         
@@ -28,7 +28,7 @@ CellLife.prototype.tick = function (callback){
         }
 
     }, this.intervals);
-}
+};
 
 CellLife.prototype.createCellByRandom = function (cellNumber) {
     const life = new Set();
@@ -39,40 +39,45 @@ CellLife.prototype.createCellByRandom = function (cellNumber) {
         })
     }
     return [...life];
-}
+};
 
 CellLife.prototype.findNeighbor = function (life) {
-    let neighbor = [];
-    for (let i = 0; i < life.length; i++) {
-        let tmp = life[i];
-        for (let j = -1; j <= 1; j++) {
-            for (let t = -1; t <= 1; t++) {
-                let xAxis = tmp.x + j;
-                let yAxis = tmp.y + t;
-                if (xAxis >= 0 && xAxis < 100 && yAxis >= 0 && yAxis < 100) {
-                    let cell = {
-                        x: xAxis,
-                        y: yAxis
-                    };
-                    if (xAxis !== tmp.x || yAxis !== tmp.y) {
-                        neighbor.push(cell);
-                    }
-                }
+    const allNeighbor = [];
+    life.forEach(cell => allNeighbor.push(...this.neighborCell(cell.x, cell.y)));
+    return allNeighbor;
+};
+
+CellLife.prototype.neighborCell = function (self_x, self_y) {
+    const neighbor = [];
+    const that = this;
+    [-1, 0, 1].forEach(function(i){
+        [-1, 0, 1].forEach(function(j){
+            const x = self_x + i;
+            const y = self_y + j;
+            if (that.isValidCell(x, y, self_x, self_y)) {
+                neighbor.push({
+                    x: x,
+                    y: y
+                });
             }
-        }
-    }
+        });
+    });
     return neighbor;
-}
+};
+
+CellLife.prototype.isValidCell = function(x, y, self_x, self_y) {
+    return x >= 0 && y >= 0 && x < 100 && y < 100 && (self_x !== x || self_y !== y);
+};
 
 CellLife.prototype.countFrequency = function (neighbor, life) {
-    let frequency = [{
+    const frequency = [{
         x: neighbor[0].x,
         y: neighbor[0].y,
         count: 1
     }];
     for (let j = 1, length = neighbor.length; j < length; j++) {
-        let ele = neighbor[j];
-        let sameEle = frequency.find(obj => ele.x === obj.x && ele.y === obj.y);
+        const ele = neighbor[j];
+        const sameEle = frequency.find(obj => ele.x === obj.x && ele.y === obj.y);
         if (sameEle) {
             sameEle.count += 1;
         } else {
@@ -84,26 +89,21 @@ CellLife.prototype.countFrequency = function (neighbor, life) {
         }
     }
     return frequency;
-}
-// 当前细胞为存活状态时，当周围低于2个（不包含2个）存活细胞时， 该细胞变成死亡状态。（模拟生命数量稀少）
-// 当前细胞为存活状态时，当周围有2个或3个存活细胞时， 该细胞保持原样。
-// 当前细胞为存活状态时，当周围有3个以上的存活细胞时，该细胞变成死亡状态。（模拟生命数量过多）
-// 当前细胞为死亡状态时，当周围有3个存活细胞时，该细胞变成存活状态。 （模拟繁殖）
+};
+
 CellLife.prototype.filterCountIsThree = function (frequency) {
-    let newLife = frequency.filter((obj, i) => obj.count === 3);
-    return newLife;
-}
+    return frequency.filter((obj, i) => obj.count === 3);
+};
 
 CellLife.prototype.filterCountIsTwo = function (frequency) {
-    let countIsTwo = frequency.filter((obj, i) => obj.count === 2);
-    return countIsTwo;
-}
+    return frequency.filter((obj, i) => obj.count === 2);
+};
 
 CellLife.prototype.mergeNewLifeAndSurvive = function (newLife, countIsTwo, life) {
-    let survive = countIsTwo.filter(ele => life.find(obj => ele.x === obj.x && ele.y === obj.y));
+    const survive = countIsTwo.filter(ele => life.find(obj => ele.x === obj.x && ele.y === obj.y));
     return [...newLife, ...survive];
-}
+};
 
-if (window.module && typeof module.exports === "object") {
+if (window.module && typeof module.exports === 'object') {
     exports.CellLife = CellLife;
 }
