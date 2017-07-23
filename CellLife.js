@@ -1,3 +1,4 @@
+'use strict';
 function CellLife(intervals, cellNumber) {
     this.intervals = intervals;
     this.cellNumber = cellNumber;
@@ -5,15 +6,15 @@ function CellLife(intervals, cellNumber) {
 }
 
 CellLife.prototype.tick = function (callback){
-    var that = this;
+    let that = this;
     callback(this.life);
-    var timer = setInterval(function(){
+    let timer = setInterval(function(){
         
-        var neighbor = that.findNeighbor(that.life);
-        var frequency = that.countFrequency(neighbor, that.life);
-        var newLife = that.filterCountIsThree(frequency);
-        var countIsTwo = that.filterCountIsTwo(frequency);
-        var nowlife = that.mergeNewLifeAndSurvive(newLife, countIsTwo, that.life);
+        let neighbor = that.findNeighbor(that.life);
+        let frequency = that.countFrequency(neighbor, that.life);
+        let newLife = that.filterCountIsThree(frequency);
+        let countIsTwo = that.filterCountIsTwo(frequency);
+        let nowlife = that.mergeNewLifeAndSurvive(newLife, countIsTwo, that.life);
 
         that.life = nowlife;
         
@@ -30,39 +31,26 @@ CellLife.prototype.tick = function (callback){
 }
 
 CellLife.prototype.createCellByRandom = function (cellNumber) {
-    var life = [];
-    
-    while (life.length < cellNumber) {
-        var obj = {};
-        obj.x = Math.floor(Math.random()*100);
-        obj.y = Math.floor(Math.random()*100);
-        life.push(obj);
+    const life = new Set();
+    while (life.size < cellNumber) {
+        life.add({
+            x: Math.floor(Math.random()*100),
+            y: Math.floor(Math.random()*100)
+        })
     }
-    life = life.filter(function(obj, j){
-        var isFind;
-        for (var i = 0; i < life.length; i++) {
-            var tmp = life[i];
-            if (j !== i) {
-                if (obj.x === tmp.x && obj.y === tmp.y) {
-                    isFind = true;
-                }
-            }
-        }
-        return !isFind;
-    });
-    return life;
+    return [...life];
 }
 
 CellLife.prototype.findNeighbor = function (life) {
-    var neighbor = [];
-    for (var i = 0; i < life.length; i++) {
-        var tmp = life[i];
-        for (var j = -1; j <= 1; j++) {
-            for (var t = -1; t <= 1; t++) {
-                var xAxis = tmp.x + j;
-                var yAxis = tmp.y + t;
+    let neighbor = [];
+    for (let i = 0; i < life.length; i++) {
+        let tmp = life[i];
+        for (let j = -1; j <= 1; j++) {
+            for (let t = -1; t <= 1; t++) {
+                let xAxis = tmp.x + j;
+                let yAxis = tmp.y + t;
                 if (xAxis >= 0 && xAxis < 100 && yAxis >= 0 && yAxis < 100) {
-                    var cell = {
+                    let cell = {
                         x: xAxis,
                         y: yAxis
                     };
@@ -77,32 +65,22 @@ CellLife.prototype.findNeighbor = function (life) {
 }
 
 CellLife.prototype.countFrequency = function (neighbor, life) {
-    var frequency = [];
-    for (var j = 0, length = neighbor.length; j < length; j++) {
-        var ele = neighbor[j];
-        if (frequency.length == 0) {
+    let frequency = [{
+        x: neighbor[0].x,
+        y: neighbor[0].y,
+        count: 1
+    }];
+    for (let j = 1, length = neighbor.length; j < length; j++) {
+        let ele = neighbor[j];
+        let sameEle = frequency.find(obj => ele.x === obj.x && ele.y === obj.y);
+        if (sameEle) {
+            sameEle.count += 1;
+        } else {
             frequency.push({
                 x: ele.x,
                 y: ele.y,
                 count: 1
             });
-        } else {
-            var isFind = false;
-            for (var i = 0, len = frequency.length; i < len; i++) {
-                var obj = frequency[i];
-                if (ele.x === obj.x && ele.y === obj.y) {
-                    isFind = true;
-                    obj.count += 1;
-                    break;
-                }
-            }
-            if (!isFind) {
-                frequency.push({
-                    x: ele.x,
-                    y: ele.y,
-                    count: 1
-                });
-            }
         }
     }
     return frequency;
@@ -112,31 +90,20 @@ CellLife.prototype.countFrequency = function (neighbor, life) {
 // 当前细胞为存活状态时，当周围有3个以上的存活细胞时，该细胞变成死亡状态。（模拟生命数量过多）
 // 当前细胞为死亡状态时，当周围有3个存活细胞时，该细胞变成存活状态。 （模拟繁殖）
 CellLife.prototype.filterCountIsThree = function (frequency) {
-    var newLife = frequency.filter(function(obj, i){
-        if (obj.count === 3) {
-            return true;
-        }
-    });
+    let newLife = frequency.filter((obj, i) => obj.count === 3);
     return newLife;
 }
 
 CellLife.prototype.filterCountIsTwo = function (frequency) {
-    var countIsTwo = frequency.filter(function(obj, i){
-        if (obj.count === 2) {
-            return true;
-        }
-    });
+    let countIsTwo = frequency.filter((obj, i) => obj.count === 2);
     return countIsTwo;
 }
 
 CellLife.prototype.mergeNewLifeAndSurvive = function (newLife, countIsTwo, life) {
-    var survive = countIsTwo.filter(function(obj, i){
-        for (var i = 0; i < life.length; i++) {
-            var tmp = life[i];
-            if (obj.x === tmp.x && obj.y === tmp.y) {
-                return true;
-            }
-        }
-    });
-    return newLife.concat(survive);
+    let survive = countIsTwo.filter(ele => life.find(obj => ele.x === obj.x && ele.y === obj.y));
+    return [...newLife, ...survive];
+}
+
+if (window.module && typeof module.exports === "object") {
+    exports.CellLife = CellLife;
 }

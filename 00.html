@@ -24,7 +24,7 @@ td {
 $(function(){
     var td = new Array(101).join( '<tr>'+(new Array(101)).join('<td></td>')+'</tr>' );
     $('#box').html(td);
-    var theCell = new CellLife(1, 20000);
+    var theCell = new CellLife(100, 1000);
     theCell.tick(function(life){
         $('#box').find('td').removeClass('life');
         var tr = $('#box').find('tr');
