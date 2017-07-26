@@ -1,0 +1,16 @@
+{
+  "name": "ConwayGame",
+  "version": "0.0.0",
+  "description": "Conway's Game of Life",
+  "private": true,
+  "scripts": {
+    "start": "node --harmony run.js",
+    "test": "mocha --harmony test"
+  },
+  "dependencies": {
+    "mocha": "",
+    "supertest": ""
+  },
+  "devDependencies": {
+  }
+}
