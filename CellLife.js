@@ -11,28 +11,19 @@
 })('CellLife', function() {
 
 'use strict';
-function CellLife(intervals, cellNumber) {
-    this.intervals = intervals;
+function CellLife(cellNumber) {
     this.cellNumber = cellNumber;
     this.life = this.createCellByRandom(cellNumber);
 }
 
 CellLife.prototype.tick = function(callback) {
-    const that = this;
     callback(this.life);
-    const timer = setInterval(function() {
+    var newLife = this.updateCell();
+    callback(newLife);
 
-        var newLife = that.updateCell();
-        callback(newLife);
-
-        if (newLife.length === 0) {
-            clearInterval(timer);
-            setTimeout(function() {
-                callback([]);
-            }, that.intervals);
-        }
-
-    }, this.intervals);
+    if (newLife.length === 0) {
+        callback([]);
+    }
 };
 
 CellLife.prototype.updateCell = function() {

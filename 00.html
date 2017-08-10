@@ -24,17 +24,29 @@ window.onload = function(){
     var table = document.getElementById('box');
     var td = new Array(101).join( '<tr>'+(new Array(101)).join('<td></td>')+'</tr>' );
     table.innerHTML = td;
-    var theCell = new CellLife(166, 5000);
-    theCell.tick(function(life){
-        box.querySelectorAll('td').forEach(function(ele, i){
-            ele.className = '';
+    var theCell = new CellLife(2000);
+
+    var tds = box.querySelectorAll('td');
+    var trs = box.querySelectorAll('tr');
+    
+    var timer = setInterval(function() {
+        theCell.tick(function(life){
+            
+            tds.forEach(function(ele, i){
+                ele.className = '';
+            });
+            
+            for (var i = 0, len = life.length; i < len; i++) {
+                var cell = life[i];
+                trs[cell.y].children[cell.x].className = 'life';
+            }
+            if (life.length === 0) {
+                clearInterval(timer);
+            }
+            
         });
-        var tr = box.querySelectorAll('tr');
-        for (var i = 0, len = life.length; i < len; i++) {
-            var cell = life[i];
-            tr[cell.y].children[cell.x].className = 'life';
-        }
-    });
+        
+    }, 300);
 };
 </script>
 <table>
