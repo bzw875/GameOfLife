@@ -18,22 +18,24 @@ td {
 </head>
 <body>
 <script type="text/javascript" src="CellLife.js"></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-$(function(){
+window.onload = function(){
+    var table = document.getElementById('box');
     var td = new Array(101).join( '<tr>'+(new Array(101)).join('<td></td>')+'</tr>' );
-    $('#box').html(td);
-    var theCell = new CellLife(166, 1000);
+    table.innerHTML = td;
+    var theCell = new CellLife(166, 5000);
     theCell.tick(function(life){
-        $('#box').find('td').removeClass('life');
-        var tr = $('#box').find('tr');
+        box.querySelectorAll('td').forEach(function(ele, i){
+            ele.className = '';
+        });
+        var tr = box.querySelectorAll('tr');
         for (var i = 0, len = life.length; i < len; i++) {
             var cell = life[i];
-            $(tr[cell.y]).find('td:eq('+cell.x+')').attr('class','life');
+            tr[cell.y].children[cell.x].className = 'life';
         }
     });
-});
+};
 </script>
 <table>
     <tbody id="box"></tbody>
