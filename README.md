@@ -1,10 +1,14 @@
 # Conway's Game of Life / 康威生命游戏
 
 
+![demo gif](https://github.com/banzhaowu-ausxin/GameOfLife/blob/master/demo.gif)
+
 ## demo
 用js写了这个游戏的demo，用ECMScript 6写，新版浏览器才可以运行
 
 查看demo：clone或者下载代码zip，然后双击00.html就可以看到了
+
+
 
 
 ```javascript
