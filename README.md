@@ -13,7 +13,7 @@
 ![demo gif](https://github.com/bzw875/GameOfLife/blob/master/demo.gif)
 
 ## demo
-用js写了这个游戏的demo，新版浏览器才可以运行
+用js写了这个游戏的[demo](https://raw.githack.com/bzw875/GameOfLife/master/00.html)，新版浏览器才可以运行
 
 查看demo：clone或者下载代码zip，然后双击00.html就可以看到了
 
