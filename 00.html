@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <title>Document</title>
 <style type="text/css">
+html,
+body {
+    font-size: 14px;
+    box-sizing: content-box;
+}
 table {
         border-collapse: collapse;
 }
@@ -14,43 +19,61 @@ td {
 .life {
     background-color: #000;
 }
+.span-num {
+    display: inline-block;
+    width: 60px;
+    background-color: #e9e9e9;
+}
+input[type="range"] {
+    width: 420px;
+}
 </style>
 </head>
 <body>
-<script type="text/javascript" src="CellLife.js"></script>
+    <div>
+        <p>
+            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="300" id="width">
+            <label for="length"><span class="span-num">300</span class="span-num">高度(1~1000)</label>
+        </p>
+        <p>
+            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="120" id="height">
+            <label for="length"><span class="span-num">120</span class="span-num">宽度(1~1000)</label>
+        </p>
+        <p>
+            <input type="range" oninput="showNum(this)" min="100" max="10000" step="10" value="8000" id="length">
+            <label for="length"><span class="span-num">8000</span>生命个数(1~10000)</label>
+        </p>
+        <p>
+            <input type="range" oninput="showNum(this)" min="10" max="1000" step="10" value="100" id="time">
+            <label for="length"><span class="span-num">100</span class="span-num">生命更新毫秒(1~1000)</label>
+        </p>
+        <p>
+            <button onclick="render()">刷新</button>
+        </p>
+    </div>
+<div id="root"></div>
+<script type="text/javascript" src="./CellLife.js"></script>
 <script type="text/javascript">
 
-window.onload = function(){
-    var table = document.getElementById('box');
-    var td = new Array(101).join( '<tr>'+(new Array(101)).join('<td></td>')+'</tr>' );
-    table.innerHTML = td;
-    var theCell = new CellLife(2000);
+window.onload = render;
 
-    var tds = box.querySelectorAll('td');
-    var trs = box.querySelectorAll('tr');
-    
-    var timer = setInterval(function() {
-        theCell.tick(function(life){
-            
-            tds.forEach(function(ele, i){
-                ele.className = '';
-            });
-            
-            for (var i = 0, len = life.length; i < len; i++) {
-                var cell = life[i];
-                trs[cell.y].children[cell.x].className = 'life';
-            }
-            if (life.length === 0) {
-                clearInterval(timer);
-            }
-            
-        });
-        
-    }, 300);
-};
+function render(){
+    if (render.obj) {
+        render.obj.destroy();
+    }
+
+    render.obj = new CellLife({
+        width        : parseInt(document.getElementById('width').value, 10),
+        height       : parseInt(document.getElementById('height').value, 10),
+        initialNumber: parseInt(document.getElementById('length').value, 10),
+        cycleTime    : parseInt(document.getElementById('time').value, 10),
+        box          : document.getElementById('root')
+    });
+}
+
+function showNum(ele) {
+    ele.parentElement.querySelector('.span-num').textContent = ele.value;
+}
 </script>
-<table>
-    <tbody id="box"></tbody>
-</table>
 </body>
 </html>
