@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Document</title>
+<title>康威生命游戏 - demo</title>
 <style type="text/css">
 html,
 body {
@@ -32,20 +32,20 @@ input[type="range"] {
 <body>
     <div>
         <p>
-            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="300" id="width">
-            <label for="length"><span class="span-num">300</span class="span-num">高度(1~1000)</label>
+            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="280" id="width">
+            <label for="length"><input type="text" onchange="fillNum(this)" class="span-num" value="280">宽度(1~1000)</label>
         </p>
         <p>
-            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="120" id="height">
-            <label for="length"><span class="span-num">120</span class="span-num">宽度(1~1000)</label>
+            <input type="range" oninput="showNum(this)" min="100" max="1000" step="10" value="100" id="height">
+            <label for="length"><input type="text" onchange="fillNum(this)" class="span-num" value="100">高度(1~1000)</label>
         </p>
         <p>
             <input type="range" oninput="showNum(this)" min="100" max="10000" step="10" value="8000" id="length">
-            <label for="length"><span class="span-num">8000</span>生命个数(1~10000)</label>
+            <label for="length"><input type="text" onchange="fillNum(this)" class="span-num" value="8000">生命个数(1~10000)</label>
         </p>
         <p>
-            <input type="range" oninput="showNum(this)" min="10" max="1000" step="10" value="100" id="time">
-            <label for="length"><span class="span-num">100</span class="span-num">生命更新毫秒(1~1000)</label>
+            <input type="range" oninput="showNum(this)" min="1" max="1000" step="1" value="100" id="time">
+            <label for="length"><input type="text" onchange="fillNum(this)" class="span-num" value="100">生命更新毫秒(1~1000)</label>
         </p>
         <p>
             <button onclick="render()">刷新</button>
@@ -72,7 +72,10 @@ function render(){
 }
 
 function showNum(ele) {
-    ele.parentElement.querySelector('.span-num').textContent = ele.value;
+    ele.parentElement.querySelector('.span-num').value = ele.value;
+}
+function fillNum(ele) {
+    ele.parentElement.previousElementSibling.value = ele.value;
 }
 </script>
 </body>
